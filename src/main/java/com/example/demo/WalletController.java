@@ -13,15 +13,15 @@ import java.util.Optional;
 public class WalletController {
 
     @Autowired
-    private UserRepository userRepository;
+    private BalanceRepository balanceRepository;
 
 
-    public WalletController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public WalletController(BalanceRepository balanceRepository) {
+        this.balanceRepository = balanceRepository;
     }
 
     @PostMapping("/summary")
-    public String summary(@RequestBody User loginUser) {
+    public String summary(@RequestBody Balance cashBalance) {
 
         return "summary";
     }
