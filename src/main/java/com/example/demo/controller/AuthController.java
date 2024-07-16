@@ -1,4 +1,6 @@
-package com.example.demo;
+package com.example.demo.controller;
+import com.example.demo.model.User;
+import com.example.demo.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +19,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public boolean login(@RequestBody User loginUser) {
+    public User login(@RequestBody User loginUser) {
         Optional<User> userOpt = userRepository.findByUserId(loginUser.getUserId());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             System.out.println(user.getPassword().equals(loginUser.getPassword()));
-            return user.getPassword().equals(loginUser.getPassword());
+            if (user.getPassword().equals(loginUser.getPassword())) {
+                return user;
+            }
         }
-        return false;
+        return null;
     }
 }
