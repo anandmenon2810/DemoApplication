@@ -6,5 +6,8 @@ import lombok.Data;
 
 public class LoyaltyDetails {
     private Long availablePoints;
-    private Long balancePoints;
+    private Long usedPointBalance;
+    private Long pointBalance;
+    private Long totalPointBalance;
+
 }

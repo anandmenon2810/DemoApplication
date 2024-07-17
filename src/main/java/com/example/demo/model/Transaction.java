@@ -15,7 +15,7 @@ public class Transaction {
     private LocalDateTime date;
     private String item;
     private String experience; // e.g., STAY, WALLET
-    private PaymentType payWith; // e.g., CASH, POINTS
+    private String payWith; // e.g., CASH, POINTS
     private Integer amount;
     private int pointsEarned;
 }

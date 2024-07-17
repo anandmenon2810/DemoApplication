@@ -71,17 +71,28 @@ public class WalletService {
         Optional<Wallet> walletOptional = walletRepository.findById(walletId);
         if (walletOptional.isPresent()) {
             Wallet wallet = walletOptional.get();
+            Integer pointsEarned=null;
             if (topUpRequest.getPaymentType().equals("CreditCard")){
                 wallet.getCashDetails().setCashBalance(wallet.getCashDetails().getCashBalance() + topUpRequest.getAmount());
+                wallet.getCashDetails().setTotalCashBalance(wallet.getCashDetails().getCashBalance() + wallet.getCashDetails().getUsedCashBalance());
+                pointsEarned= (int) (topUpRequest.getAmount()*5);
+                wallet.setAuthorizedAmount(wallet.getAuthorizedAmount() - topUpRequest.getAmount());
             }
             else {
-                wallet.getLoyaltyDetails().setBalancePoints(wallet.getLoyaltyDetails().getBalancePoints() + topUpRequest.getAmount());
+                wallet.getLoyaltyDetails().setPointBalance(wallet.getLoyaltyDetails().getPointBalance() + topUpRequest.getAmount());
+                wallet.getLoyaltyDetails().setTotalPointBalance(wallet.getLoyaltyDetails().getPointBalance() + wallet.getLoyaltyDetails().getUsedPointBalance());
+                wallet.getLoyaltyDetails().setAvailablePoints(wallet.getLoyaltyDetails().getAvailablePoints() - topUpRequest.getAmount());
             }
             // Create a new transaction for the top-up
             Transaction transaction = new Transaction();
+            transaction.setItem("TOPUP");
             transaction.setAmount(topUpRequest.getAmount());
             transaction.setExperience("WALLET");
             transaction.setDate(LocalDateTime.now());
+            if (pointsEarned!=null) {
+                transaction.setPointsEarned(pointsEarned);
+            }
+            transaction.setPayWith(topUpRequest.getPaymentType().equals("CreditCard")?"CASH":"POINTS");
 
             // Add the transaction to the wallet
             wallet.getTransactions().add(transaction);
